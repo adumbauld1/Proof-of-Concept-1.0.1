@@ -1,0 +1,19 @@
+public enum HexTileType
+{
+    Grass,
+    Jungle,
+    Woods,
+    Hills,
+    Rock,
+    Mountain,
+    Village,
+    SteepMountain,
+    Water,
+    City,
+    SupplyCache,
+    Marsh,
+    MilitaryBase,
+    CheckPoint,
+    Road,
+    River
+}
