@@ -18,6 +18,9 @@ public class CameraController : MonoBehaviour
     [Header("Rotation (Q/E)")]
     public float rotationSpeed = 90f;  //degrees per second
 
+    [Header("Panning (Middle Mouse Button)")]
+    public float dragPanSpeed = 0.05f;
+
     [Header("Zoom (scroll wheel)")]
     public float zoomSpeed = 5f;
     public float minZoomDistance = 5f;
@@ -56,6 +59,7 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         HandlePan();
+        HandleMouseDrag();
         HandleRotation();
         HandleZoom();
     }
@@ -77,6 +81,22 @@ public class CameraController : MonoBehaviour
         Vector3 move = transform.TransformDirection(input.normalized);
         move.y = 0f; // keep panning flat regardless of camera tilt
         transform.position += move * panSpeed * Time.deltaTime;
+    }
+
+    private void HandleMouseDrag()
+    {
+        Mouse mouse = Mouse.current;
+        if (mouse == null || !mouse.middleButton.isPressed) return;
+
+        Vector2 delta = mouse.delta.ReadValue();
+        if (delta == Vector2.zero) return;
+
+        // drag right -> camera moves left (content follows the cursor), same convention
+        // as most map/RTS editors. Uses teh rig's own facing, same as WASD.
+        Vector3 input = new Vector3(-delta.x, 0f, -delta.y);
+        Vector3 move = transform.TransformDirection(input);
+        move.y = 0f;
+        transform.position += move * dragPanSpeed;
     }
 
     private void HandleRotation()
